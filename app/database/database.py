@@ -15,10 +15,3 @@ try:
     Base.metadata.create_all(engine)
 except Exception as error:
     print(f"{error} couldn't connect to database")
-
-
-with Session(engine) as session:
-    stmt = select(User).where(User.username.in_(["danni", "tamara"]))
-
-    for user in session.scalars(stmt):
-        print(user)

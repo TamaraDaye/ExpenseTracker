@@ -30,7 +30,7 @@ class User(Base):
     )
 
     def __repr__(self) -> str:
-        return f"User({self.username}, {self.email})"
+        return f"User({self.username}, {self.id})"
 
 
 class Expense(Base):
@@ -46,3 +46,6 @@ class Expense(Base):
         DateTime(timezone=True), onupdate=func.now(), nullable=True
     )
     user: Mapped["User"] = relationship(back_populates="expenses")
+
+    def __repr__(self) -> str:
+        return f"Expense({self.id},{self.expense_type},{self.amount},{self.user})"
