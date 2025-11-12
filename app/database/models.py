@@ -5,6 +5,7 @@ import enum
 from datetime import datetime
 
 
+# define enum for expenses limiting users to particular expense choices
 class ExpenseType(enum.Enum):
     groceries = "groceries"
     leisure = "leisure"
@@ -15,11 +16,21 @@ class ExpenseType(enum.Enum):
     others = "others"
 
 
+# database ORM mapped tables will inherit from this class essentially registering them here
 class Base(DeclarativeBase):
     pass
 
 
+# users table
 class User(Base):
+    """
+    This is the table data for users
+    each class variable will represent a column in the table
+    the variable annotated type witht the Mapped construct will
+    represent its field type
+    Columns - id, username, email, password
+    """
+
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(String(50))
@@ -33,7 +44,16 @@ class User(Base):
         return f"User({self.username}, {self.id})"
 
 
+# Expense table
 class Expense(Base):
+    """
+    This is the table data for Expenses
+    each class variable will represent a column in the table
+    the variable annotated type witht the Mapped construct will
+    represent its field type
+    Columns - id, expense_type, amount, created_at, updated_at, user_id
+    """
+
     __tablename__ = "expenses"
     id: Mapped[int] = mapped_column(primary_key=True)
     expense_type: Mapped[ExpenseType]

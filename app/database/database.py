@@ -2,11 +2,9 @@ import os
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 from sqlalchemy_utils import database_exists, create_database
-from models import Base, User
+from models import Base, Expense, User
 
 CONNECTION_STRING = os.getenv("DATABASE_CONNECTION")
-
-print(CONNECTION_STRING)
 
 try:
     engine = create_engine(CONNECTION_STRING, echo=True)
