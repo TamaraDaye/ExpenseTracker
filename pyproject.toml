@@ -6,5 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "fastapi[standard]>=0.121.1",
+    "psycopg2>=2.9.11",
     "sqlalchemy>=2.0.44",
+    "sqlalchemy-utils>=0.42.0",
 ]
