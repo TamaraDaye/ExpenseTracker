@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel, EmailStr
 
 
@@ -34,3 +35,8 @@ class ExpenseCreate(BaseModel):
 class ExpenseResponse(ExpenseCreate):
     id: int
     created_at: datetime
+
+
+class ExpenseUpdate(BaseModel):
+    id: int
+    amount: Optional[int] = None

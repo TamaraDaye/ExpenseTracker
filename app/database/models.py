@@ -1,4 +1,5 @@
 from sqlalchemy import String, ForeignKey, DateTime, func
+from sqlalchemy.ext.asyncio import AsyncAttrs
 from typing import List
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 import enum
@@ -17,7 +18,7 @@ class ExpenseType(enum.Enum):
 
 
 # database ORM mapped tables will inherit from this class essentially registering them here
-class Base(DeclarativeBase):
+class Base(DeclarativeBase, AsyncAttrs):
     pass
 
 
@@ -68,4 +69,4 @@ class Expense(Base):
     user: Mapped["User"] = relationship(back_populates="expenses")
 
     def __repr__(self) -> str:
-        return f"Expense({self.id},{self.expense_type},{self.amount},{self.user})"
+        return f"Expense({self.id},{self.expense_type},{self.amount},{self.created_at}, {self.user})"
