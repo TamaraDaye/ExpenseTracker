@@ -2,6 +2,11 @@ from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, EmailStr
 
+"""
+pydantic schemas for data validation
+for return and response 
+"""
+
 
 class Token(BaseModel):
     access_token: str

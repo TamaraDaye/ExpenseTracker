@@ -23,6 +23,3 @@ def get_session():
 
 
 SessionDep = Annotated[Session, Depends(get_session)]
-
-with Session(engine) as session:
-    pass

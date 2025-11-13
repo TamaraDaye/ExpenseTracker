@@ -18,6 +18,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    """
+    This function creates a jwt access token with user data encoded
+    """
     to_encode = data.copy()
 
     if expires_delta:
@@ -39,6 +42,11 @@ async def get_current_user(
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+
+    """
+    Dependency object for protected routes that require 
+    authentication decodes token and returns the user
+    """
 
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])

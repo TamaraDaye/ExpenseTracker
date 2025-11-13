@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from secrets import token_bytes
 from typing import Annotated
 from fastapi import APIRouter, Body, Depends, Form, Query, HTTPException
 from sqlalchemy import select
@@ -15,6 +16,9 @@ router = APIRouter()
 
 @router.get("/users/", tags=["users"], response_model=list[schemas.UserResponse])
 async def get_users(session: SessionDep):
+    """
+    function to return a list of users
+    """
     users = session.scalars(select(models.User))
     return users
 
@@ -25,6 +29,11 @@ async def read_current_user(
     current_user: Annotated[models.User, Depends(Oauth2.get_current_user)],
     filter: Annotated[str | None, Query()] = None,
 ):
+    """
+    This function returns the current user that is the user signed with the jwt tokens
+    expenses asychronously
+    """
+
     if filter is None:
         return current_user.expenses
 
@@ -39,6 +48,9 @@ async def read_current_user(
 
 @router.post("/signup/", tags=["users"], response_model=schemas.UserResponse)
 async def create_user(data: Annotated[schemas.UserCreate, Form()], session: SessionDep):
+    """
+    Endpoint for creating new users
+    """
     data.password = get_password_hash(data.password)
     db_user = models.User(**data.model_dump())
     session.add(db_user)
@@ -55,6 +67,9 @@ async def create_expense(
     expense: Annotated[schemas.ExpenseCreate, Body()],
     session: SessionDep,
 ):
+    """
+    Endpoint for authenticated user to create an Expense
+    """
     db_expense = models.Expense(**expense.model_dump(), user=current_user)
     session.add(db_expense)
     session.flush()
@@ -74,6 +89,10 @@ async def update_expense(
     ],  # must contain id + optional fields
     session: SessionDep,
 ):
+    """
+    Endpoint for updating a particular expense
+    """
+
     db_expense = session.get(models.Expense, expense.id)
     if db_expense is None:
         raise HTTPException(status_code=404, detail="Expense not found")
@@ -101,6 +120,8 @@ async def delete_expense(
     current_user: Annotated[models.User, Depends(Oauth2.get_current_user)],
     session: SessionDep,
 ):
+    """Endpoint to delete an Expense"""
+
     db_expense = session.get(models.Expense, expense_id)
     if db_expense is None:
         raise HTTPException(status_code=404, detail="Expense not found")

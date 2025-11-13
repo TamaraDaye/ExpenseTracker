@@ -15,6 +15,9 @@ async def login(
     user_credentials: Annotated[OAuth2PasswordRequestForm, Depends()],
     session: SessionDep,
 ):
+    """
+    Endpoint to log a user in and retrieve jwt token to be stored by front end
+    """
     stmt = select(models.User).where(models.User.email == user_credentials.username)
 
     user = session.scalar(stmt)
