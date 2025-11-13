@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel, EmailStr
 
 
@@ -30,5 +31,6 @@ class ExpenseCreate(BaseModel):
     Expense: str
 
 
-class ExpenseUpdate(ExpenseCreate):
-    pass
+class ExpenseResponse(ExpenseCreate):
+    id: int
+    created_at: datetime
