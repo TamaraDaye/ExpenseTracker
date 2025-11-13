@@ -28,7 +28,7 @@ class UserLogin(UserCreate):
 
 class ExpenseCreate(BaseModel):
     amount: int
-    Expense: str
+    expense_type: str
 
 
 class ExpenseResponse(ExpenseCreate):

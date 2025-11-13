@@ -27,6 +27,6 @@ async def login(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Invalid credentials"
         )
-    access_token = Oauth2.create_access_token(data={"sub": user.id})
+    access_token = Oauth2.create_access_token(data={"user_id": user.id})
 
     return access_token
