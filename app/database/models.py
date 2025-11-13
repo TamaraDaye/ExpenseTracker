@@ -33,9 +33,9 @@ class User(Base):
 
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String(50))
-    email: Mapped[str] = mapped_column(String(50))
-    password: Mapped[str] = mapped_column(String(50))
+    username: Mapped[str] = mapped_column(String(200))
+    email: Mapped[str] = mapped_column(String(200))
+    password: Mapped[str] = mapped_column(String(200))
     expenses: Mapped[List["Expense"]] = relationship(
         back_populates="user", cascade="all, delete-orphan"
     )

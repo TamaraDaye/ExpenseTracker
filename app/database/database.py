@@ -1,8 +1,10 @@
 import os
+from typing import Annotated
+from fastapi import Depends
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 from sqlalchemy_utils import database_exists, create_database
-from models import Base, Expense, User
+from .models import Base, Expense, User
 
 CONNECTION_STRING = os.getenv("DATABASE_CONNECTION")
 
@@ -13,3 +15,11 @@ try:
     Base.metadata.create_all(engine)
 except Exception as error:
     print(f"{error} couldn't connect to database")
+
+
+def get_session():
+    with Session(engine) as session:
+        yield session
+
+
+SessionDep = Annotated[Session, Depends(get_session)]
