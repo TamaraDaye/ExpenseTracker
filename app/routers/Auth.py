@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from . import Oauth2
 from ..database import models
-from ..database.database import SessionDep
+from ..database import database
 from typing import Annotated
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
@@ -13,7 +13,7 @@ router = APIRouter()
 @router.post("/login/")
 async def login(
     user_credentials: Annotated[OAuth2PasswordRequestForm, Depends()],
-    session: SessionDep,
+    session: database.SessionDep,
 ):
     """
     Endpoint to log a user in and retrieve jwt token to be stored by front end

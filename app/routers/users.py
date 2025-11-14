@@ -1,21 +1,18 @@
 from datetime import datetime, timezone
-from secrets import token_bytes
 from typing import Annotated
 from fastapi import APIRouter, Body, Depends, Form, Query, HTTPException
 from sqlalchemy import select
 from .. import utils
 from .. import schemas
-from app.database import models
-from app.database.database import SessionDep
+from app.database import models, database
 from app.routers import Oauth2
-from app.utils import get_password_hash
 
 
 router = APIRouter()
 
 
 @router.get("/users/", tags=["users"], response_model=list[schemas.UserResponse])
-async def get_users(session: SessionDep):
+async def get_users(session: database.SessionDep):
     """
     function to return a list of users
     """
@@ -25,7 +22,7 @@ async def get_users(session: SessionDep):
 
 @router.get("/user/me", tags=["users"], response_model=list[schemas.ExpenseResponse])
 async def read_current_user(
-    session: SessionDep,
+    session: database.SessionDep,
     current_user: Annotated[models.User, Depends(Oauth2.get_current_user)],
     filter: Annotated[str | None, Query()] = None,
 ):
@@ -47,11 +44,13 @@ async def read_current_user(
 
 
 @router.post("/signup/", tags=["users"], response_model=schemas.UserResponse)
-async def create_user(data: Annotated[schemas.UserCreate, Form()], session: SessionDep):
+async def create_user(
+    data: Annotated[schemas.UserCreate, Form()], session: database.SessionDep
+):
     """
     Endpoint for creating new users
     """
-    data.password = get_password_hash(data.password)
+    data.password = utils.get_password_hash(data.password)
     db_user = models.User(**data.model_dump())
     session.add(db_user)
     session.flush()
@@ -65,7 +64,7 @@ async def create_user(data: Annotated[schemas.UserCreate, Form()], session: Sess
 async def create_expense(
     current_user: Annotated[models.User, Depends(Oauth2.get_current_user)],
     expense: Annotated[schemas.ExpenseCreate, Body()],
-    session: SessionDep,
+    session: database.SessionDep,
 ):
     """
     Endpoint for authenticated user to create an Expense
@@ -87,7 +86,7 @@ async def update_expense(
     expense: Annotated[
         schemas.ExpenseUpdate, Body()
     ],  # must contain id + optional fields
-    session: SessionDep,
+    session: database.SessionDep,
 ):
     """
     Endpoint for updating a particular expense
@@ -118,7 +117,7 @@ async def update_expense(
 async def delete_expense(
     expense_id: int,
     current_user: Annotated[models.User, Depends(Oauth2.get_current_user)],
-    session: SessionDep,
+    session: database.SessionDep,
 ):
     """Endpoint to delete an Expense"""
 
